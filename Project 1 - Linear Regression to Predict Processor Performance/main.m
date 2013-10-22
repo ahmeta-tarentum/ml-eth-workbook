@@ -8,17 +8,22 @@ ETA_T = 0.09; % Learning rate
 LAMBDA = 10.0; % Regularization parameter
 K = 10; % for K-fold cross validation
 
+RUN_VALIDATION = true;
+VALIDATION_INPUT_FILE = 'data/validation.csv';
+VALIDATION_OUTPUT_FILE = 'validation_output.csv';
+
 %%
 % TRAINING
 
 % Create Matrix X for data and Vector y for labels
-X = M(:, 1:14);
+X_raw = M(:, 1:14);
 y = M(:, 15);
 
 % Feature transformations
-X(:, 8:9) = sqrt(X(:, 8:9));
-X(:, 11:13) = sqrt(X(:, 11:13));
-X = [X X(:, 1:14) .^ 2];
+% X(:, 8:9) = sqrt(X(:, 8:9));
+% X(:, 11:13) = sqrt(X(:, 11:13));
+% X = [X X(:, 1:14) .^ 2];
+X = phi(X_raw);
 
 cvo = cvpartition(size(M,1), 'kfold', K);
 
@@ -36,6 +41,9 @@ for i=1:K,
     
     X_train = X(train_idx_nums, :);
     Y_train = y(train_idx_nums, :);
+    
+    % Some more feature transformations to the training set
+    Y_train = log(Y_train);
     
     X_test = X(test_idx_nums, :);
     Y_test = y(test_idx_nums, :);
@@ -79,7 +87,7 @@ for i=1:K,
     X_test_fixed = [ones(m_test, 1) X_test_renorm];
     
     % Predict and cross-validate
-    Y_pred = X_test_fixed * w;
+    Y_pred = exp(X_test_fixed * w);
     cv_error = sqrt( (1/m_test) * sum((Y_pred - Y_test).^2) ) / mean(Y_test);
     % fprintf('Testing Error %d: ', i);
     % disp(cv_error);
@@ -91,7 +99,7 @@ for i=1:K,
     w_cf = pinv((X_train_renorm' * X_train_renorm) + lambda_mat) * X_train_renorm' * Y_train;
     w_avgs_cf(i, :) = w_cf;
     
-    Y_pred_cf = X_test_fixed * w_cf;
+    Y_pred_cf = exp(X_test_fixed * w_cf);
     cv_error_cf = sqrt( (1/m_test) * sum((Y_pred_cf - Y_test).^2) ) / mean(Y_test);
     k_testing_error_cf(i) = cv_error_cf;
 end;
@@ -109,5 +117,22 @@ disp([(0:size(w,1)-1)' mean(w_avgs)' mean(w_avgs_cf)']);
 
 %%
 % VALIDATION
+% Predict answers for validation data set and write to a file
+if RUN_VALIDATION
+    X_validation_raw = csvread(VALIDATION_INPUT_FILE);
+
+    % Transform raw dataset
+    X_validation_raw = phi(X_validation_raw);
+    % Feature scale and Mean normalize test set
+    m_validation = size(X_validation_raw, 1);
+    X_fscaled_validation = X_validation_raw - repmat(X_mean, m_validation, 1);
+    X_validation_renorm = X_fscaled_validation ./ repmat(sqrt(X_var),  m_validation, 1);
+    X_validation_fixed = [ones(m_validation, 1) X_validation_renorm];
+    
+    % Predict
+    Y_validation_predictions = exp(X_validation_fixed * w_cf);
+
+    dlmwrite(VALIDATION_OUTPUT_FILE, Y_validation_predictions);
+end;  
 
 %%
