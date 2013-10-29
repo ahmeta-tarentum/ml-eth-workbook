@@ -113,7 +113,7 @@ disp(k_testing_error_cf);
 fprintf('Average training error: %f\n', mean(k_training_error));
 fprintf('Average test error: %f\n', mean(k_testing_error));
 fprintf('Average CF test error: %f\n', mean(k_testing_error_cf));
-disp([mod((0:size(w,1)-1), 14)' mean(w_avgs)' mean(w_avgs_cf)']);
+% disp([mod((0:size(w,1)-1), 14)' mean(w_avgs)' mean(w_avgs_cf)']);
 
 %%
 % VALIDATION
