@@ -99,7 +99,48 @@ function [ X ] = phi( X )
     % X = [X X.*repmat(X(:, 13), 1, size(X, 2)) X.*repmat(X(:, 14), 1, size(X, 2))];
     
     % CV error = 0.408416
-    X = [X X(:, 13).^2 X(:, 11).*X(:, 13)];
+    % X = [X X(:, 13).^2 X(:, 11).*X(:, 13)];
+    
+    % CV error = 0.292294
+    % X = [X X.*repmat(X(:, 13), 1, size(X, 2)) X.^2 X.^3 X.^4 X.^5 X.^6];
+    
+    % CV error = 0.255053
+    % X = [log(X) X X.*repmat(X(:, 13), 1, size(X, 2)) X.^2 X.^3 X.^4 X.^5 X.^6];
+        
+    % CV error = 0.430720
+    % X = [X(:, 3) X(:, 5) X(:, 8) X(:, 10) X(:, 13) X(:, 14)];
+    
+    % CV error = 0.398825
+    % temp_X = [X(:, 3) X(:, 5) X(:, 8) X(:, 10) X(:, 13) X(:, 14)];
+    % X = [temp_X X(:, 13).^2 X(:, 11).*X(:, 13)];
+    
+    % CV error = 0.324603
+%     temp_X = [X(:, 3) X(:, 5) X(:, 8) X(:, 10) X(:, 13) X(:, 14)];
+%     X = [log(temp_X) temp_X temp_X.^2 temp_X.^3 temp_X.^4];
+    
+    % CV error = 0.381539
+    % temp_X = [X(:, 3) X(:, 5) X(:, 8) X(:, 10) X(:, 13) X(:, 14)];
+    % X = [log(temp_X) temp_X temp_X.^2];
+    
+    % CV error = 0.330208
+    % temp_X = [X(:, [3 5 8 10 13 14])];
+    % X = [log(temp_X) temp_X temp_X.^2 X.*repmat(X(:, 13), 1, size(X, 2))];
+    
+    % CV error = 0.337644
+%     temp_X = [X(:, [3 5 8 10 13 14])];
+%     temp_x14_mult = X.*repmat(X(:, 14), 1, size(X, 2));
+%     X = [log(temp_X) temp_X temp_X.^2 X.*repmat(X(:, 13), 1, size(X, 2)) temp_x14_mult(:, [1 2 4 6 7 8 9 12 13 14])];
 
+    % CV error = 0.253399
+    % temp_X = [X(:, [3 5 8 10 13 14])];
+    % X = [log(temp_X) X.*repmat(X(:, 13), 1, size(X, 2)) temp_X temp_X.^2 temp_X.^3 temp_X.^4 temp_X.^5];
+    
+    % CV error = 0.246295
+    % temp_X = [X(:, [3 5 8 10 13 14])];
+    % X = [log(temp_X) sqrt(temp_X) X.*repmat(X(:, 13), 1, size(X, 2)) temp_X temp_X.^2 temp_X.^3 temp_X.^4 temp_X.^5];
+    
+    % CV error = 0.
+    temp_X = [X(:, [3 5 8 10 13 14])];
+    X = [log(temp_X) sqrt(temp_X) X.*repmat(X(:, 13), 1, size(X, 2)) temp_X temp_X.^2 temp_X.^3 temp_X.^4 temp_X.^5];
 end
 

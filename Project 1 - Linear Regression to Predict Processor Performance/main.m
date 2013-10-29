@@ -8,7 +8,7 @@ ETA_T = 0.09; % Learning rate
 LAMBDA = 10.0; % Regularization parameter
 K = 10; % for K-fold cross validation
 
-RUN_VALIDATION = false;
+RUN_VALIDATION = true;
 VALIDATION_INPUT_FILE = 'data/validation.csv';
 VALIDATION_OUTPUT_FILE = 'validation_output.csv';
 
