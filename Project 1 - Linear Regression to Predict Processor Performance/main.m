@@ -5,10 +5,10 @@ M = csvread('data/training.csv');
 % Constants/Parameters
 NUM_ITERATIONS = 100;
 ETA_T = 0.09; % Learning rate
-LAMBDA = 10e-04; % Regularization parameter
+LAMBDA = 10e-05; % Regularization parameter
 K = 10; % for K-fold cross validation
 
-RUN_VALIDATION = false;
+RUN_VALIDATION = true;
 VALIDATION_INPUT_FILE = 'data/validation.csv';
 VALIDATION_OUTPUT_FILE = 'validation_output.csv';
 
@@ -80,7 +80,6 @@ for i=1:K,
 %     w_avgs(i, :) = w';
 
     w = ridge(Y_train, X_train, LAMBDA, 0);
-    disp(size(w));
     % k_training_error(i) = training_error(X_train, Y_train, w, LAMBDA) / mean(Y_train);
     w_avgs(i, :) = w';
     
@@ -133,13 +132,14 @@ if RUN_VALIDATION
     X_validation_raw = phi(X_validation_raw);
     % Feature scale and Mean normalize test set
     m_validation = size(X_validation_raw, 1);
-    X_fscaled_validation = X_validation_raw - repmat(X_mean, m_validation, 1);
-    X_validation_renorm = X_fscaled_validation ./ repmat(sqrt(X_var),  m_validation, 1);
-    % X_validation_fixed = [ones(m_validation, 1) X_validation_renorm];
-    X_validation_fixed = X_validation_renorm;
+%     X_fscaled_validation = X_validation_raw - repmat(X_mean, m_validation, 1);
+%     X_validation_renorm = X_fscaled_validation ./ repmat(sqrt(X_var),  m_validation, 1);
+%     X_validation_fixed = [ones(m_validation, 1) X_validation_renorm];
+%     X_validation_fixed = X_validation_renorm;
+    X_validation_fixed = [ones(m_validation, 1) X_validation_raw];
     
     % Predict
-    Y_validation_predictions = phiyinv(X_validation_fixed * w_cf);
+    Y_validation_predictions = phiyinv(X_validation_fixed * w);
 
     dlmwrite(VALIDATION_OUTPUT_FILE, Y_validation_predictions);
 end;  

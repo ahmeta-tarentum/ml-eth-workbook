@@ -158,14 +158,27 @@ function [ X ] = phi( X )
     % temp_X = [X(:, [3 5 8 10 13 14])];
     % X = [X.*repmat(X(:, 13), 1, size(X, 2)) X.*repmat(X(:, 5), 1, size(X, 2))  temp_X log(temp_X) sqrt(temp_X)];
     
-    % CV Error = 
+    % CV Error = 0.217533, with Lambda=10e-05
+%     linear_X  = X(:,[5 10 13]);
+%     square_root_X = sqrt(X(:, [5 8 10 13 14]));
+%     log_X = log(X(:,[3 5 10 13 14]));
+%     X_5_comb = X.*repmat(X(:, 5), 1, size(X, 2));
+%     X_5_comb = X_5_comb(:,[1 2 3 5 6 7 10]);
+%     X_13_comb = X.*repmat(X(:, 13), 1, size(X, 2));
+%     X = [ X_5_comb X_13_comb linear_X   log_X square_root_X];
+    
+    % CV Error = 0.197356 with Lambda=10e-05
     linear_X  = X(:,[5 10 13]);
     square_root_X = sqrt(X(:, [5 8 10 13 14]));
     log_X = log(X(:,[3 5 10 13 14]));
     X_5_comb = X.*repmat(X(:, 5), 1, size(X, 2));
-    X_5_comb = X_5_comb(:,[1 2 3 5 6 7 10]);
+    X_5_comb = X_5_comb(:,[10]);
     X_13_comb = X.*repmat(X(:, 13), 1, size(X, 2));
-    X = [ X_5_comb X_13_comb linear_X   log_X square_root_X];
+    X_13_comb = X_13_comb(:,[14]);
+    X_4_comb = X.*repmat(X(:, 4), 1, size(X, 2));
+    X_4_comb = X_4_comb(:,[5 8 10]);
+    square_X = X(:,[3 4 13]).^2;
+    X = [ X_5_comb X_13_comb linear_X log_X square_root_X X_4_comb square_X];
     
 end
 
